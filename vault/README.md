@@ -3,6 +3,12 @@
 A Zettelkasten-style vault manager for Obsidian. Process inbox items into linked
 notes, organize files, and research topics.
 
+## ⚠️ Warning: Beta Software
+
+**Back up your vault before using this plugin.** Use git, Obsidian Sync, or
+another backup solution. Claude can make mistakes and may corrupt or delete
+files in your vault. This has happened. You have been warned.
+
 ## The Problem
 
 You capture ideas, links, and thoughts in Obsidian, but they just sit there
@@ -21,8 +27,18 @@ A Claude Code plugin that:
 ## Installation
 
 ```bash
+# Add the marketplace
+/plugin marketplace add markphelps/claude-plugins
+
+# Install the vault plugin
+/plugin install vault@markphelps-marketplace
+```
+
+For local development:
+
+```bash
 # From local directory
-claude /plugin install /path/to/vault-plugin
+/plugin install /path/to/vault-plugin
 
 # Or load temporarily
 claude --plugin-dir /path/to/vault-plugin
