@@ -1,7 +1,7 @@
 {
-  "name": "claude-plugins",
+  "name": "cc-plugins",
   "version": "0.0.1",
-  "description": "My Claude Plugins",
+  "description": "My Claude Code Plugins",
   "owner": {
     "name": "Mark Phelps",
     "email": "mark.aaron.phelps@gmail.com"
