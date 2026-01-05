@@ -82,41 +82,65 @@ For each markdown file:
 
 1. Read the content
 2. Extract existing frontmatter
-3. Determine:
+3. Extract title for filename:
+   - **First choice:** H1 heading (`# Title Here`)
+   - **Second choice:** First meaningful sentence (skip frontmatter, blank
+     lines)
+   - **Fallback:** Keep current filename (just kebab-case it)
+4. Determine:
    - What is the core topic?
    - What tags apply?
-   - What's a good filename?
    - Should it be grouped with other files?
 
-### Step 3: Design new structure
+### Step 3: Generate filenames from titles
+
+Convert extracted titles to filenames:
+
+1. **Strip markdown** - Remove `#`, `**`, links, etc.
+2. **Convert to kebab-case** - Lowercase, spaces/underscores to hyphens
+3. **Remove filler words** - Strip leading "a", "an", "the"
+4. **Truncate to 50 characters** - Cut at word boundary, don't leave partial
+   words
+5. **Add .md extension**
+
+**Examples:**
+
+| Title                                                                         | Generated Filename                       |
+| ----------------------------------------------------------------------------- | ---------------------------------------- |
+| `# Building a Voice Notes App for iOS`                                        | `building-voice-notes-app-for-ios.md`    |
+| `# My Thoughts on the Future of Artificial Intelligence and Machine Learning` | `my-thoughts-on-future-of-artificial.md` |
+| `First line is just some random text about cars`                              | `first-line-is-just-some-random-text.md` |
+| (no title found)                                                              | `original-filename.md` (kebab-cased)     |
+
+### Step 4: Design new structure
 
 Based on analysis, design an organized structure. Principles:
 
 - **Group by topic** - Related files go together
 - **Consistent naming** - lowercase, kebab-case
-- **Clear file names** - Descriptive, not generic
+- **Content-driven filenames** - Derived from title, max 50 chars
 
 Example transformation:
 
 ```
 BEFORE:
-├── Random Thoughts.md
+├── Random Thoughts.md              # H1: "My Random Thoughts on Life"
 ├── carsearch/
-│   └── 90-DAY MVP AI CAR SHOPPING AGENT.md
-├── Voice Notes App idea.md
+│   └── 90-DAY MVP AI CAR SHOPPING AGENT.md  # H1: "90-Day MVP: AI Car Shopping Agent"
+├── Voice Notes App idea.md         # H1: "Building a Voice Notes App"
 └── voice-notes/
-    └── research.md
+    └── research.md                 # No H1, first line: "Research on voice recording APIs"
 
 AFTER:
 ├── car-search/
-│   └── prd.md
+│   └── 90-day-mvp-ai-car-shopping-agent.md
 ├── voice-notes-app/
-│   ├── idea.md
-│   └── research.md
-└── random-thoughts.md
+│   ├── building-voice-notes-app.md
+│   └── research-on-voice-recording-apis.md
+└── my-random-thoughts-on-life.md
 ```
 
-### Step 4: Build and save execution plan
+### Step 5: Build and save execution plan
 
 Create the hidden directory if needed:
 
@@ -138,15 +162,21 @@ Build the plan:
     "create_folders": ["voice-notes-app/"],
     "renames": [
       { "from": "carsearch/", "to": "car-search/" },
-      { "from": "Random Thoughts.md", "to": "random-thoughts.md" }
+      { "from": "Random Thoughts.md", "to": "my-random-thoughts-on-life.md" }
     ],
     "moves": [
-      { "from": "Voice Notes App idea.md", "to": "voice-notes-app/idea.md" },
-      { "from": "voice-notes/research.md", "to": "voice-notes-app/research.md" }
+      {
+        "from": "Voice Notes App idea.md",
+        "to": "voice-notes-app/building-voice-notes-app.md"
+      },
+      {
+        "from": "voice-notes/research.md",
+        "to": "voice-notes-app/research-on-voice-recording-apis.md"
+      }
     ],
     "frontmatter_updates": [
       {
-        "file": "car-search/prd.md",
+        "file": "car-search/90-day-mvp-ai-car-shopping-agent.md",
         "set": {
           "updated": "2025-01-04",
           "tags": ["automotive", "ai"],
@@ -162,7 +192,7 @@ Build the plan:
 
 Write to: `._meta/plans/YYYY-MM-DD-HHMMSS.json`
 
-### Step 5: Present plan
+### Step 6: Present plan
 
 Display in human-readable format:
 
@@ -171,11 +201,11 @@ Proposed reorganization:
 
 RENAMES:
   carsearch/ → car-search/
-  "Random Thoughts.md" → "random-thoughts.md"
+  "Random Thoughts.md" → "my-random-thoughts-on-life.md"
 
 MOVES:
-  "Voice Notes App idea.md" → voice-notes-app/idea.md
-  voice-notes/research.md → voice-notes-app/research.md
+  "Voice Notes App idea.md" → voice-notes-app/building-voice-notes-app.md
+  voice-notes/research.md → voice-notes-app/research-on-voice-recording-apis.md
 
 NEW FOLDERS:
   voice-notes-app/
@@ -192,7 +222,7 @@ Plan saved: ._meta/plans/2025-01-04-153000.json
 
 **If `--yes`:** Proceed to execution.
 
-### Step 6: Execute
+### Step 7: Execute
 
 Read the plan from disk and execute exactly what's specified:
 
@@ -203,7 +233,7 @@ Read the plan from disk and execute exactly what's specified:
 5. Delete empty folders
 6. Update plan status to `"executed"`
 
-### Step 7: Update frontmatter
+### Step 8: Update frontmatter
 
 For each note, ensure frontmatter has:
 
@@ -218,7 +248,7 @@ source: manual
 Preserve existing values where present. Only add `status` field if the note
 appears to be a project/idea.
 
-### Step 8: Report results
+### Step 9: Report results
 
 ```
 Reorganization complete!
@@ -235,8 +265,9 @@ Plan: ._meta/plans/2025-01-04-153000.json (executed)
 ## Naming Conventions
 
 - **Folders:** lowercase, kebab-case (`my-project-name/`)
-- **Files:** lowercase, kebab-case (`my-file-name.md`)
-- **System files:** Prefix with `_` (`_archive/`)
+- **Files:** Derived from H1 title or first sentence, kebab-case, max 50 chars
+- **Fallback:** If no title found, kebab-case the original filename
+- **System folders:** Prefix with `_` (`_archive/`)
 
 ## Safety
 
