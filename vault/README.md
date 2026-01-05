@@ -32,6 +32,7 @@ claude --plugin-dir /path/to/vault-plugin
 
 | Command                  | Description                                        |
 | ------------------------ | -------------------------------------------------- |
+| `/vault:init`            | Initialize vault folder structure                  |
 | `/vault:process`         | Process inbox items into linked notes              |
 | `/vault:organize`        | Reorganize vault files and update frontmatter      |
 | `/vault:research [note]` | Research a note (competitors, discussions, market) |
@@ -39,7 +40,7 @@ claude --plugin-dir /path/to/vault-plugin
 
 ## Quick Start
 
-1. Create an `inbox/` folder in your Obsidian vault
+1. Run `/vault:init` to create the folder structure
 2. Dump ideas, links, and thoughts into the inbox (any format)
 3. Run `/vault:process` to turn them into linked notes
 4. Run `/vault:organize` to clean up file structure
@@ -60,7 +61,7 @@ After creating notes, it discovers connections and adds bidirectional links.
 Example:
 
 ```
-INBOX:
+inbox/:
 ├── 2025-01-04.md (daily log with thoughts)
 ├── cool-article.md (just a URL)
 └── shower-thought.md
