@@ -11,11 +11,14 @@ A collection of plugins for [Claude Code](https://claude.ai/code).
 ## Installation
 
 ```bash
-# Install a plugin permanently
-claude /plugin install /path/to/claude-plugins/vault
+# Add this repository as a plugin marketplace
+/plugin marketplace add https://github.com/markphelps/claude-plugins
 
-# Or load temporarily for a session
-claude --plugin-dir /path/to/claude-plugins/vault
+# Install individual plugins
+/plugin install vault
+
+# Or browse available plugins
+/plugin marketplace list
 ```
 
 ## Creating Your Own Plugin
@@ -42,4 +45,4 @@ Mark Phelps
 
 ## License
 
-MIT
+[MIT](LICENSE.md)
