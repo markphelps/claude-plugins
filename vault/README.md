@@ -28,6 +28,21 @@ claude /plugin install /path/to/vault-plugin
 claude --plugin-dir /path/to/vault-plugin
 ```
 
+## Getting Started
+
+After installing, navigate to your Obsidian vault and run:
+
+```bash
+/vault:init
+```
+
+This creates the required folder structure:
+
+- `inbox/` - Where you'll drop ideas, links, and thoughts
+- `._meta/plans/` - Where execution plans are saved for safety
+
+The command is safe to run multiple times - it won't overwrite existing files.
+
 ## Commands
 
 | Command                  | Description                                        |
@@ -141,6 +156,8 @@ Findings are appended to your note with sources.
 ```
 
 ## File Structure
+
+Running `/vault:init` creates this structure:
 
 ```
 vault/
