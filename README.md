@@ -1,0 +1,45 @@
+# Claude Plugins
+
+A collection of plugins for [Claude Code](https://claude.ai/code).
+
+## Available Plugins
+
+| Plugin            | Description                                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [vault](./vault/) | Zettelkasten-style vault manager for Obsidian. Process inbox items into linked notes, organize files, and research topics. |
+
+## Installation
+
+```bash
+# Install a plugin permanently
+claude /plugin install /path/to/claude-plugins/vault
+
+# Or load temporarily for a session
+claude --plugin-dir /path/to/claude-plugins/vault
+```
+
+## Creating Your Own Plugin
+
+See [CLAUDE.md](./CLAUDE.md) for plugin architecture and structure.
+
+For official documentation, see the
+[Claude Code Plugins Guide](https://code.claude.com/docs/en/plugins).
+
+## Development
+
+```bash
+npm install          # Install dev dependencies (sets up husky hooks)
+npm run format       # Format all markdown and JSON files
+npm run validate     # Validate all plugin.json manifests
+```
+
+Pre-commit hooks automatically format staged files and validate plugin
+manifests.
+
+## Author
+
+Mark Phelps
+
+## License
+
+MIT

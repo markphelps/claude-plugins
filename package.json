@@ -1,0 +1,21 @@
+{
+  "name": "claude-plugins",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Claude Code plugin marketplace",
+  "scripts": {
+    "format": "prettier --write '**/*.{md,json}'",
+    "format:check": "prettier --check '**/*.{md,json}'",
+    "validate": "node scripts/validate-plugins.js",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "prettier": "^3.4.2"
+  },
+  "lint-staged": {
+    "*.{md,json}": "prettier --write",
+    "**/.claude-plugin/plugin.json": "node scripts/validate-plugins.js"
+  }
+}

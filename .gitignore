@@ -1,0 +1,7 @@
+**/docs/**
+*.log
+*.tmp
+.DS_Store
+.vscode/
+node_modules/
+.env
