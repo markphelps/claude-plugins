@@ -184,7 +184,8 @@ Build the plan:
         }
       }
     ],
-    "delete_empty_folders": ["voice-notes/", "carsearch/"]
+    "delete_empty_folders": ["voice-notes/", "carsearch/"],
+    "wikilink_updates": []
   },
   "status": "pending"
 }
@@ -192,7 +193,50 @@ Build the plan:
 
 Write to: `._meta/plans/YYYY-MM-DD-HHMMSS.json`
 
-### Step 6: Present plan
+### Step 6: Scan for wikilinks to update
+
+For each file being renamed or moved, scan the **entire vault** for wikilinks
+pointing to it:
+
+**Wikilink formats to match:**
+
+- `[[filename]]` - bare filename (no extension)
+- `[[filename|display text]]` - with alias
+- `[[path/to/filename]]` - with path
+- `[[path/to/filename|display text]]` - path with alias
+
+**Build wikilink update map:**
+
+For each rename/move operation, find all `.md` files containing wikilinks to the
+old path and record the replacements needed:
+
+```json
+"wikilink_updates": [
+  {
+    "file": "projects/overview.md",
+    "replacements": [
+      {
+        "old": "[[Voice Notes App idea]]",
+        "new": "[[voice-notes-app/building-voice-notes-app|Voice Notes App idea]]"
+      },
+      {
+        "old": "[[Voice Notes App idea|my app]]",
+        "new": "[[voice-notes-app/building-voice-notes-app|my app]]"
+      }
+    ]
+  }
+]
+```
+
+**Matching rules:**
+
+1. Match is case-insensitive for the filename portion
+2. Preserve the original display text (alias) if present
+3. If no alias existed, add one with the original link text (maintains
+   readability)
+4. Match with or without `.md` extension
+
+### Step 7: Present plan
 
 Display in human-readable format:
 
@@ -210,6 +254,9 @@ MOVES:
 NEW FOLDERS:
   voice-notes-app/
 
+WIKILINK UPDATES:
+  3 files contain links that will be updated
+
 FRONTMATTER UPDATES:
   5 files will have frontmatter added/updated
 
@@ -222,18 +269,19 @@ Plan saved: ._meta/plans/2025-01-04-153000.json
 
 **If `--yes`:** Proceed to execution.
 
-### Step 7: Execute
+### Step 8: Execute
 
 Read the plan from disk and execute exactly what's specified:
 
 1. Create new folders (`mkdir -p`)
 2. Rename folders (do folders first)
 3. Move/rename files
-4. Update frontmatter on all markdown files
-5. Delete empty folders
-6. Update plan status to `"executed"`
+4. Update wikilinks in all affected files
+5. Update frontmatter on all markdown files
+6. Delete empty folders
+7. Update plan status to `"executed"`
 
-### Step 8: Update frontmatter
+### Step 9: Update frontmatter
 
 For each note, ensure frontmatter has:
 
@@ -248,7 +296,7 @@ source: manual
 Preserve existing values where present. Only add `status` field if the note
 appears to be a project/idea.
 
-### Step 9: Report results
+### Step 10: Report results
 
 ```
 Reorganization complete!
@@ -257,6 +305,7 @@ Changes made:
 - Renamed 2 folders
 - Renamed 3 files
 - Moved 2 files
+- Updated 12 wikilinks across 3 files
 - Updated 8 files with frontmatter
 
 Plan: ._meta/plans/2025-01-04-153000.json (executed)
