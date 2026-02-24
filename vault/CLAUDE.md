@@ -14,8 +14,12 @@ researches topics.
 **Plugin Structure:**
 
 - `.claude-plugin/plugin.json` - Plugin manifest (name: "vault", version 0.0.1)
-- `commands/` - Slash commands (`/vault:process`, `/vault:organize`,
-  `/vault:research`, `/vault:cleanup`)
+- `commands/` - Slash commands:
+  - **Management:** `/vault:init`, `/vault:process`, `/vault:organize`,
+    `/vault:compact`, `/vault:cleanup`
+  - **Thinking:** `/vault:ideas`, `/vault:trace`, `/vault:connect`,
+    `/vault:drift`, `/vault:challenge`, `/vault:review`
+  - **Research:** `/vault:research`
 - `agents/` - Subagent definitions (e.g., `researcher.md` for deep research
   tasks)
 - `skills/` - Context-aware skills (e.g., `vault-context` for providing relevant
@@ -41,6 +45,7 @@ parallel execution.
 
 ```yaml
 # Universal fields (all notes)
+created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tags: [freeform, tags]
 source: inbox | url | manual
@@ -53,6 +58,8 @@ status: active | someday | done | archived
 
 - `inbox/` - Raw captures (links, thoughts, daily logs)
 - `inbox/_processed/` - Archived processed items with date folders
+- `daily/` - Daily notes created by `/vault:review`
+- `_templates/` - Note templates (e.g., `daily.md` for Obsidian)
 - `._meta/plans/` - Execution plans saved before filesystem changes
 
 **Two-Pass Processing:**
