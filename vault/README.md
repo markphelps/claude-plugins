@@ -1,7 +1,7 @@
 # Vault Plugin for Claude Code
 
-A Zettelkasten-style vault manager for Obsidian. Process inbox items into linked
-notes, organize files, and research topics.
+A Zettelkasten-style vault manager for Obsidian. Process inbox, organize files,
+research topics, and think with your notes.
 
 ## ⚠️ Warning: Beta Software
 
@@ -22,7 +22,9 @@ A Claude Code plugin that:
 - **Processes** your inbox into atomic, linked notes
 - **Discovers** connections between notes automatically
 - **Organizes** your vault with consistent structure
+- **Compacts** fragmented small notes into consolidated files
 - **Researches** topics with competitors and market signals
+- **Thinks** with your notes — traces ideas, finds patterns, challenges beliefs
 
 ## Installation
 
@@ -55,19 +57,41 @@ After installing, navigate to your Obsidian vault and run:
 This creates the required folder structure:
 
 - `inbox/` - Where you'll drop ideas, links, and thoughts
+- `daily/` - Daily notes for `/vault:review`
+- `_templates/daily.md` - Daily note template (works with Obsidian's Daily Notes
+  plugin)
 - `._meta/plans/` - Where execution plans are saved for safety
 
 The command is safe to run multiple times - it won't overwrite existing files.
 
 ## Commands
 
+### Management
+
+| Command           | Description                                     |
+| ----------------- | ----------------------------------------------- |
+| `/vault:init`     | Initialize vault folder structure and templates |
+| `/vault:process`  | Process inbox items into linked notes           |
+| `/vault:organize` | Reorganize vault files and update frontmatter   |
+| `/vault:compact`  | Merge clusters of small related notes into one  |
+| `/vault:cleanup`  | Delete old processed items and plan files       |
+
+### Thinking
+
+| Command                                | Description                                            |
+| -------------------------------------- | ------------------------------------------------------ |
+| `/vault:ideas`                         | Scan vault for patterns, generate ideas to build/write |
+| `/vault:trace [topic]`                 | Track how an idea evolved over time                    |
+| `/vault:connect [topic A] + [topic B]` | Find unexpected connections between two topics         |
+| `/vault:drift`                         | Surface recurring themes you haven't noticed           |
+| `/vault:challenge [topic]`             | Pressure-test your thinking, find contradictions       |
+| `/vault:review`                        | Daily planning (morning) and reflection (evening)      |
+
+### Research
+
 | Command                  | Description                                        |
 | ------------------------ | -------------------------------------------------- |
-| `/vault:init`            | Initialize vault folder structure                  |
-| `/vault:process`         | Process inbox items into linked notes              |
-| `/vault:organize`        | Reorganize vault files and update frontmatter      |
 | `/vault:research [note]` | Research a note (competitors, discussions, market) |
-| `/vault:cleanup`         | Delete old processed items and plan files          |
 
 ## Quick Start
 
@@ -75,7 +99,9 @@ The command is safe to run multiple times - it won't overwrite existing files.
 2. Dump ideas, links, and thoughts into the inbox (any format)
 3. Run `/vault:process` to turn them into linked notes
 4. Run `/vault:organize` to clean up file structure
-5. Run `/vault:research my-note` to research a specific topic
+5. Run `/vault:compact` to merge fragmented small notes
+6. Run `/vault:research my-note` to research a specific topic
+7. Run `/vault:ideas` to see what patterns emerge from your notes
 
 ## How It Works
 
@@ -135,15 +161,56 @@ Flags:
 - `--no-move` - Only update frontmatter, don't reorganize
 - `--shallow` - Only reorganize top-level
 
+### Note Compaction
+
+`/vault:compact` finds clusters of small, fragmented notes and merges them:
+
+- **Date-series detection** — `health-tracker-2026-02-17.md`,
+  `health-tracker-2026-02-18.md`, ... → single `health-tracker.md` with dated
+  sections
+- **Cross-folder awareness** — finds scattered files with the same base name
+- **Tag-based clustering** — groups notes with high tag overlap
+
+All content is preserved. Wikilinks are updated throughout the vault.
+
+### Thinking With Your Notes
+
+The thinking commands use your vault as a second brain:
+
+- **`/vault:ideas`** — Scans for patterns across your notes and generates ideas
+  for things to build, write, explore, or revisit
+- **`/vault:trace AI agents`** — Shows a timeline of how your thinking on a
+  topic evolved, with quotes from your notes
+- **`/vault:connect filmmaking + AI`** — Finds unexpected bridges between two
+  topics in your vault
+- **`/vault:drift`** — Surfaces recurring themes that appear across unrelated
+  notes — things you keep returning to without realizing it
+- **`/vault:challenge "building in public"`** — Finds contradictions in your
+  thinking, weak assumptions, and blind spots
+- **`/vault:review`** — Morning planning or evening reflection. Creates daily
+  notes with a consistent template
+
+### Daily Notes
+
+`/vault:review` creates and works with daily notes in `daily/`. Run
+`/vault:init` to set up the template.
+
+For Obsidian integration, enable the Daily Notes core plugin and set:
+
+- **Template:** `_templates/daily`
+- **Folder:** `daily`
+- **Date format:** `YYYY-MM-DD`
+
 ### Frontmatter
 
 The plugin uses minimal, flexible frontmatter:
 
 ```yaml
 ---
+created: 2025-01-04
 updated: 2025-01-04
 tags: [topic, concept]
-source: inbox | url | manual
+source: inbox | url | manual | compacted
 status: active | someday | done | archived # optional, for projects
 ---
 ```
@@ -181,6 +248,10 @@ vault/
 │   ├── (your raw captures)
 │   └── _processed/
 │       └── 2025-01-04/
+├── daily/
+│   └── 2025-01-04.md
+├── _templates/
+│   └── daily.md
 ├── (your organized notes)
 └── ._meta/
     └── plans/

@@ -75,6 +75,7 @@ URLs).
 
 ```markdown
 ---
+created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tags: [extracted, from, content]
 source: url
@@ -99,6 +100,7 @@ Filename: kebab-case from title (e.g., `how-to-build-voice-apps.md`)
 
 ```markdown
 ---
+created: YYYY-MM-DD
 updated: YYYY-MM-DD
 tags: [inferred, topics]
 source: inbox

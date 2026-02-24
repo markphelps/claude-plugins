@@ -36,13 +36,52 @@ Create these folders if they don't exist:
 ```
 vault/
 ├── inbox/           # Where raw captures go
+├── daily/           # Daily notes (used by /vault:review)
+├── _templates/      # Note templates
+│   └── daily.md     # Daily note template (for Obsidian)
 └── ._meta/
     └── plans/       # Execution plans saved here
 ```
 
 Use `mkdir -p` to create folders (safe if they already exist).
 
-### Step 3: Create starter files (optional)
+### Step 3: Create daily note template
+
+Create the template file for daily notes:
+
+**\_templates/daily.md:**
+
+```markdown
+---
+created: { { date } }
+updated: { { date } }
+tags: [daily]
+---
+
+# {{date}}
+
+## Plan
+
+-
+
+## Log
+
+-
+
+## Ideas
+
+-
+
+## Carry Forward
+
+-
+```
+
+The `{{date}}` placeholders work with Obsidian's Templater or core Templates
+plugin. Users can also just use `/vault:review` which creates daily notes
+directly.
+
+### Step 4: Create starter files (optional)
 
 If `inbox/` was just created (was empty), create a welcome file:
 
@@ -66,19 +105,22 @@ into linked notes.
 Delete this file once you've added your first real item.
 ```
 
-### Step 4: Report results
+### Step 5: Report results
 
 ```
 ✓ Vault initialized
 
 Created:
   - inbox/
+  - daily/
+  - _templates/daily.md
   - ._meta/plans/
 
 Next steps:
   1. Add items to inbox/ (links, thoughts, daily logs)
   2. Run /vault:process to create linked notes
-  3. Run /vault:organize to clean up file structure
+  3. Run /vault:review morning to start your day
+  4. Run /vault:organize to clean up file structure
 ```
 
 If folders already existed, say so:
@@ -88,10 +130,17 @@ If folders already existed, say so:
 
 Existing folders found:
   - inbox/ (5 items)
+  - daily/
   - ._meta/plans/
 
 Ready to use. Run /vault:process to process inbox items.
 ```
+
+**Obsidian tip:** Enable the Daily Notes core plugin and set:
+
+- Template: `_templates/daily`
+- Folder: `daily`
+- Date format: `YYYY-MM-DD`
 
 ## Safety
 
