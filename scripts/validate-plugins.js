@@ -35,7 +35,6 @@ if (args.length > 0) {
     .filter((f) => f.endsWith('plugin.json'))
     .forEach((f) => validatePlugin(f))
 } else {
-  const glob = require('path')
   const pluginFiles = []
 
   function findPlugins(dir) {

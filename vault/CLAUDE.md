@@ -22,8 +22,7 @@ researches topics.
   - **Research:** `/vault:research`
 - `agents/` - Subagent definitions (e.g., `researcher.md` for deep research
   tasks)
-- `skills/` - Context-aware skills (e.g., `vault-context` for providing relevant
-  note context)
+- `skills/` - Context-aware skills
 
 **Command Files Are Prompts:** Each `.md` file in `commands/` is a full prompt
 definition with YAML frontmatter for description. Commands define multi-step
