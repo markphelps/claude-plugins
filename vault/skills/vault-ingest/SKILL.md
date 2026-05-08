@@ -1,14 +1,15 @@
 ---
 name: vault-ingest
 description:
-  Use when raw vault captures need classification, routing, and relocation from
-  the source inbox into the right vault directories
+  Use when raw vault captures need classification, routing, relocation, and
+  external-source synthesis from the source inbox into the right vault surfaces
 ---
 
 # Vault Ingest
 
-Categorize captures in `raw/sources/` and move the original source files to the
-correct location in the vault. Do not summarize source contents into new notes.
+Categorize captures in `raw/sources/`, route owned/user-authored material to the
+right vault directories, and synthesize tagged external sources into curated
+notes while preserving complete source evidence.
 
 ## Parameters
 
@@ -24,11 +25,13 @@ For each ingestion cycle:
 - Source starts in `raw/sources/` (unprocessed inbox)
 - The source file itself remains the durable artifact
 - Each source is classified by intent, topic, and lifecycle state before moving
-- Source files move to the most specific existing vault location
+- Source files move to the most specific existing vault location when they are
+  owned/user-authored material or working source records
 - Owned notes, project ideas, drafts, and planning captures are moved intact
   rather than summarized
 - Notes tagged `external` are browser-clipped or imported external sources and
-  are eligible for synthesis during processing
+  should be synthesized during apply-mode processing unless the user explicitly
+  requests routing only
 - When a capture duplicates or extends an existing note, idea, project, or
   resource, merge it into that destination when confidence is high
 - Any source that is summarized or synthesized must keep a complete immutable
@@ -54,14 +57,14 @@ folders when an existing one fits.
 | Active project material | `projects/active/<project>/`                         |
 | Durable conceptual note | `notes/concepts/` only when it is itself canonical   |
 | General durable note    | `notes/<topic>/` or the closest existing note area   |
-| `external` reference    | `notes/<topic>/`                                     |
+| `external` reference    | Archive source in `raw/processed/YYYY-MM-DD/`; write synthesis to `notes/<topic>/` |
 | Asset or binary support | `raw/assets/` or an existing asset folder            |
 | No clear durable home   | Leave in `raw/sources/` and report the ambiguity     |
 
-When a source clearly belongs with an existing project, idea, or note, move it
-there even if the file is messy. Preserve the original content and filename
-unless a minimal rename is needed to avoid collision or clarify the source
-identity.
+When an owned/user-authored source clearly belongs with an existing project,
+idea, or note, move it there even if the file is messy. Preserve the original
+content and filename unless a minimal rename is needed to avoid collision or
+clarify the source identity.
 
 ## Merge Rules
 
@@ -94,8 +97,8 @@ identifies the item as their own idea, route it to `ideas/` directly:
 
 External articles, discussions, docs, and market references captured with
 Obsidian Note Clipper should carry an `external` tag. That tag tells ingestion
-the note came from an outside source and may be summarized while preserving the
-complete clipped note.
+the note came from an outside source and should be synthesized by default while
+preserving the complete clipped note.
 
 X bookmark source records are captured by `vault-x-bookmarks`. If the task is to
 delete irrelevant, minimal, or low-value bookmark captures from `raw/sources/`,
@@ -109,9 +112,10 @@ Recognize `external` in either common Obsidian form:
 
 ## Copy vs Synthesize Decision
 
-Default to moving or merging the full source intact. Synthesize during
-processing only when the note is tagged `external`, or when the user explicitly
-asks to summarize/synthesize a specific untagged source.
+Default to moving or merging owned/user-authored sources intact. Default to
+synthesizing tagged `external` sources during apply-mode processing. Synthesize
+untagged sources only when the user explicitly asks to summarize/synthesize a
+specific source.
 
 Plain copy/move/merge is correct when:
 
@@ -129,11 +133,12 @@ Synthesis is correct when:
   comparison, or research
 - Multiple external sources need to be combined into a brief
 
-When synthesis happens, first archive the complete source under
+When synthesis happens, first move the complete source under
 `raw/processed/YYYY-MM-DD/`, then write the synthesis with links to those
-archived source records. A working source record may also live under
-`notes/<topic>/`, `projects/.../research/`, or `ideas/.../research/`, but the
-complete archived copy is the immutable citation target.
+archived source records. The synthesis should live in the most specific curated
+destination, such as `notes/<topic>/`, `projects/.../research/`, or
+`ideas/.../research/`. The archived complete source is the immutable citation
+target.
 
 ## Workflow
 
@@ -146,9 +151,12 @@ complete archived copy is the immutable citation target.
    - Choose the most specific destination path
    - Detect filename collisions and propose minimal safe renames
    - Detect duplicate or continuation captures and propose merge targets
-   - Check for the `external` tag and decide copy/move/merge vs synthesis
+   - Check for the `external` tag and plan archive + synthesis by default
    - Leave low-confidence items in place and list the decision needed
-4. **Move or merge** high-confidence sources to their destination paths
+4. **Move, merge, or synthesize** high-confidence sources:
+   - Move owned/user-authored sources intact to their destination paths
+   - Archive tagged external sources under `raw/processed/YYYY-MM-DD/`
+   - Write curated synthesis notes that link to the archived complete sources
 5. **Update** navigation and ops trail only as needed:
    - Add moved durable files to `index.md` when they belong in active navigation
    - Rewrite links for merged files when a canonical destination replaces them
@@ -170,6 +178,8 @@ complete archived copy is the immutable citation target.
   files
 - Do not create summaries, synthesized notes, or rewritten interpretations of
   owned source files during ingest
+- Synthesize tagged external sources by default in apply mode, preserving the
+  complete source under `raw/processed/YYYY-MM-DD/` first
 - Do not synthesize untagged sources unless the user explicitly asks for it
 - Do not remove the `external` tag from archived source records
 - Non-destructive edits by default — source files are moved, not rewritten
